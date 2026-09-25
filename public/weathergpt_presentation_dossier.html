@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WeatherGPT — Judge Presentation & Product Architecture</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    
+    @page {
+      size: A4;
+      margin: 1.5cm;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.6;
+      margin: 0;
+      padding: 2.5rem;
+    }
+
+    .no-print-bar {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+    }
+
+    .btn-download {
+      background: #06b6d4;
+      color: #042f2e;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-download:hover {
+      background: #0891b2;
+      color: #ffffff;
+    }
+
+    @media print {
+      .no-print-bar {
+        display: none !important;
+      }
+      body {
+        padding: 0 !important;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+
+    h1, h2, h3, h4 {
+      color: #0f172a;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+
+    .doc-header {
+      border-bottom: 3px solid #0ea5e9;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tagline {
+      font-size: 1.25rem;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    .slide-card {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .slide-title {
+      font-size: 1.35rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #0f172a;
+    }
+
+    .slide-number {
+      background: #0ea5e9;
+      color: #ffffff;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background: #e2e8f0;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .highlight-cell {
+      background: #ecfeff;
+      font-weight: 600;
+      color: #0e7490;
+    }
+
+    .code-block {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 1.25rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      line-height: 1.5;
+      margin: 1rem 0;
+    }
+
+    ul, ol {
+      padding-left: 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .speaker-script {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 1.25rem;
+      border-radius: 0 12px 12px 0;
+      margin-top: 1rem;
+      font-style: normal;
+    }
+
+    .speaker-timing {
+      font-weight: 700;
+      color: #15803d;
+      margin-bottom: 0.25rem;
+      display: block;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Non-printed action bar for one-click Save as PDF -->
+  <div class="no-print-bar">
+    <div>
+      <strong style="font-size: 1.1rem; display: block;">WeatherGPT Pitch Deck & Technical Dossier</strong>
+      <span style="font-size: 0.85rem; color: #94a3b8;">Ready to save or upload to Google Drive</span>
+    </div>
+    <button class="btn-download" onclick="window.print()">Save as PDF / Print</button>
+  </div>
+
+  <div class="doc-header">
+    <span class="badge">National Hackathon Technical Pitch Dossier</span>
+    <h1 style="font-size: 2.4rem; margin: 0.25rem 0;">WeatherGPT</h1>
+    <div class="tagline">"Ask the weather. Understand the risk. Take action."</div>
+    <p style="color: #64748b; margin-top: 0.5rem; font-size: 0.95rem;">
+      <strong>Project URL:</strong> https://ais-dev-7cn2pgpwjfvx6dtywqex6g-404933851457.asia-southeast1.run.app<br>
+      <strong>Category:</strong> Conversational AI · Meteorological Fusion · Risk Intelligence
+    </p>
+  </div>
+
+  <!-- SLIDE 1 -->
+  <div class="slide-card">
+    <div class="slide-title">
+      <span class="slide-number">1</span>
+      <span>Executive Summary & The 10-Second Hook</span>
+    </div>
+    <p><strong>Core Concept:</strong> WeatherGPT is an AI-powered conversational weather intelligence platform that translates complex meteorological telemetry and multi-model forecast ensembles into plain-language, risk-aware personal decisions.</p>
+    <div class="speaker-script">
+      <span class="speaker-timing">Verbal Hook for Judges:</span>
+      "Every morning, billions of people look at an app that says '29°C and 60% chance of rain'. But what does that mean for an evening two-wheeler commute, a flowering tomato harvest, or an open-air event? Standard weather apps deliver raw data. WeatherGPT delivers <strong>actionable human intelligence</strong>."
+    </div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide-card">
+    <div class="slide-title">
+      <span class="slide-number">2</span>
+      <span>The Problem: Why Traditional Weather Apps Fail</span>
+    </div>
+    <ul>
+      <li><strong>Information Overload Without Clarity:</strong> Displays barometric curves, dew points, and radar maps that 95% of users cannot interpret within 5 seconds.</li>
+      <li><strong>The "Single Percentage" Fallacy:</strong> A generic "70% rain" number conceals whether it is a light 15-minute shower or a localized 40mm deluge during evening rush hour.</li>
+      <li><strong>Context Blindness:</strong> A student with books in a backpack, a farmer planning overhead pesticide spraying, and a highway commuter receive identical, unadapted numbers.</li>
+      <li><strong>Black-Box Predictions:</strong> Users cannot see whether major global forecast models (ECMWF, GFS, IMD) agree or strongly diverge on rainfall timing.</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide-card">
+    <div class="slide-title">
+      <span class="slide-number">3</span>
+      <span>Competitive Matrix & Unique Differentiators</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Standard Weather Apps</th>
+          <th>Generic LLM Chatbots</th>
+          <th>WeatherGPT (Our Solution)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Data Trust</strong></td>
+          <td>Single proprietary API feed</td>
+          <td>Hallucination prone / Outdated</td>
+          <td class="highlight-cell">Verified Multi-Model Meteorological Fusion</td>
+        </tr>
+        <tr>
+          <td><strong>Output Style</strong></td>
+          <td>Dense numbers & static charts</td>
+          <td>Long conversational text only</td>
+          <td class="highlight-cell">Plain-Language + Verified Evidence Cards</td>
+        </tr>
+        <tr>
+          <td><strong>Persona Engine</strong></td>
+          <td>None (One size fits all)</td>
+          <td>None without lengthy prompting</td>
+          <td class="highlight-cell">6 Native Personas (Student, Farmer, Commuter, etc.)</td>
+        </tr>
+        <tr>
+          <td><strong>Forecast Agreement</strong></td>
+          <td>Hidden</td>
+          <td>None</td>
+          <td class="highlight-cell">Inter-model variance (ECMWF vs GFS) & "Why?"</td>
+        </tr>
+        <tr>
+          <td><strong>Agro Microclimate</strong></td>
+          <td>None</td>
+          <td>Generic generalities</td>
+          <td class="highlight-cell">Crop-stage soil moisture, disease risk, spray windows</td>
+        </tr>
+        <tr>
+          <td><strong>Languages</strong></td>
+          <td>Raw translated strings</td>
+          <td>Inconsistent translations</td>
+          <td class="highlight-cell">Context-aware English, Hindi (हिन्दी), Kannada (ಕನ್ನಡ)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SLIDE 4 -->
+  <div class="slide-card">
+    <div class="slide-title">
+      <span class="slide-number">4</span>
+      <span>The Technical Architecture: Anti-Hallucination Pipeline</span>
+    </div>
+    <p>A fundamental requirement of WeatherGPT is that <strong>the LLM is never the forecasting system</strong>. It interprets verified physical science.</p>
+    <div class="code-block">
+[ User Query (Text or Voice) ]
+              ↓
+[ Intent Detection & Persona Profiling ]
+              ↓
+[ Verified Meteorological Data Fetching ]
+  • Open-Meteo Feed & Surface Stations
+  • Multi-Model Ensembles (ECMWF IFS, NOAA GFS, IMD NWP)
+              ↓
+[ Weather Intelligence & Risk Engine ]
+  • Computes Inter-Model Agreement & Operational Risk (Low/Moderate/High)
+  • Calculates Convective Gusts & Cloudburst Probability
+              ↓
+[ Server-Side Gemini 3.8 Flash (via @google/genai) ]
+  • Strictly constrained: "Interpret verified data. Never invent numbers."
+              ↓
+[ Dual Output Stream ]
+  • Natural Language Actionable Advice
+  • Verified Evidence Card + 1-Click Action Buttons
+    </div>
+    <p><em>Resilience Feature:</em> If API connectivity drops, an offline local rule-based intelligence engine automatically activates, ensuring uninterrupted service.</p>
+  </div>
+
+  <!-- SLIDE 5 -->
+  <div class="slide-card">
+    <div class="slide-title">
+      <span class="slide-number">5</span>
+      <span>Key Product Modules & Live Demo Walkthrough</span>
+    </div>
+    <ol>
+      <li><strong>5-Second Hero Card:</strong> 29°C, Feels Like 31°C, Rain 62%, Humidity 71%, Wind 14 km/h, UV 6, with GPS auto-detection and city presets.</li>
+      <li><strong>Ask WeatherGPT:</strong> Immediate voice-enabled (🎙️) natural language query input with suggested questions directly below the hero card.</li>
+      <li><strong>Conversational Evidence Cards:</strong> Displays rain probability, expected millimeters, wind gusts, temperature, model consensus, and Text-to-Speech audio read-aloud.</li>
+      <li><strong>Diurnal Forecast Center:</strong> Responsive SVG temperature curves with hourly rainfall bars, plus 7-day outlooks with morning/afternoon/evening/night periods.</li>
+      <li><strong>Interactive Radar Map:</strong> Animated layers for Rain, Temperature, Wind streams, and Alert boundaries with a +30m/+60m/+90m timeline scrubber.</li>
+      <li><strong>Alert Center:</strong> Tiered Red/Orange/Yellow warnings with validity windows, meteorological root causes, and radius customization (10km / 25km / 50km).</li>
+      <li><strong>Agriculture Intelligence:</strong> Crop-specific advisories (Tomato, Rice, Wheat, Coffee) matching growth stages to soil moisture and pesticide application windows.</li>
+      <li><strong>Climate Explorer:</strong> 30-year surface temperature anomalies (1995–2026) contextualizing short-term weather within long-term climate change.</li>
+    </ol>
+  </div>
+
+  <!-- SLIDE 6 -->
+  <div class="slide-card">
+    <div class="slide-title">
+      <span class="slide-number">6</span>
+      <span>2-Minute Verbal Pitch Script for the Judges</span>
+    </div>
+    <div class="speaker-script">
+      <span class="speaker-timing">[0:00 - 0:30] Introduction & Problem:</span>
+      "Judges, when you check the weather before leaving your house, you don't care about a 1012 millibar reading. You care about one simple question: 'Will it rain on my commute, and should I leave work early?' Traditional apps give you raw data and leave you to guess. We built <strong>WeatherGPT</strong>: an AI weather intelligence platform that translates meteorological science into clear, risk-aware personal action."
+    </div>
+    <div class="speaker-script">
+      <span class="speaker-timing">[0:30 - 1:10] The Live Architecture Demo:</span>
+      "On our homepage, you see the essentials within 5 seconds. Right below is <strong>Ask WeatherGPT</strong>. I can ask: 'Can I travel tonight?' Our server fetches verified multi-model ensembles, compares ECMWF and GFS, and our Gemini engine generates a 2-sentence verdict. It also attaches a Verified Evidence Card showing exact precipitation metrics and forecast agreement. Our LLM never hallucinates numbers—it acts as an intelligent interpreter of verified physical datasets."
+    </div>
+    <div class="speaker-script">
+      <span class="speaker-timing">[1:10 - 1:45] Differentiators: Personas & Agriculture:</span>
+      "Our biggest differentiator is contextual personalization. If a user selects 'Commuter', WeatherGPT flags road underpass flooding around 5 PM. If a farmer selects 'Tomato' at the flowering stage, it switches to Agriculture Intelligence, advising them to hold irrigation for 48 hours to prevent fungal rot. We also provide full native support in Hindi and Kannada, an interactive radar map, and long-term climate analytics."
+    </div>
+    <div class="speaker-script">
+      <span class="speaker-timing">[1:45 - 2:00] Closing:</span>
+      "WeatherGPT is not another generic dashboard, nor is it an ungrounded chatbot. It is a decision-support system that bridges the gap between meteorological science and everyday life. Thank you!"
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem; color: #94a3b8; font-size: 0.85rem;">
+    WeatherGPT · Hackathon Documentation · Generated for Google AI Studio Project
+  </div>
+
+</body>
+</html>

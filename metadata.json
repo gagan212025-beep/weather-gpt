@@ -1,0 +1,6 @@
+{
+  "name": "WeatherGPT",
+  "description": "Conversational AI-powered weather intelligence platform for forecasts, alerts, climate insights, and personalized weather decisions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
